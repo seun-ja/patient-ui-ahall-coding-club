@@ -13,91 +13,96 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
   const [profileOpen, setProfileOpen] = useState(false);
   const router = useRouter();
 
-  const toggleSidebar = () => {
-    if (open) {
-      setProfileOpen(false);
-    }
-
-    setOpen(!open);
-  };
-
   const handleSignOut = () => {
     localStorage.removeItem("token");
     router.push("/login");
   };
 
   return (
-    <motion.div
-      animate={{ width: open ? 240 : 60 }}
-      transition={{ duration: 0.25 }}
-      className="bg-white shadow-lg h-full flex flex-col overflow-hidden border-r border-gray-200"
-    >
-      {/* Toggle button */}
-      <button
-        onClick={toggleSidebar}
-        className="h-20 p-3 hover:bg-gray-100 transition text-3xl"
-      >
-        ☰
-      </button>
+    <AnimatePresence>
+      {open && (
+        <>
+          {/* BACKDROP */}
+          <motion.div
+            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40"
+            onClick={() => setOpen(false)}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          />
 
-      {/* Navigation */}
-      <nav className="flex-1 mt-4 px-2">
-        {/* Profile */}
-        <div className="mb-2">
-          <button
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="flex items-center w-full px-3 py-2 hover:bg-gray-100 rounded-lg transition"
+          {/* SIDEBAR */}
+          <motion.div
+            initial={{ x: -280 }}
+            animate={{ x: 0 }}
+            exit={{ x: -280 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            className="fixed top-0 left-0 h-full w-72 bg-white z-50 shadow-2xl flex flex-col"
           >
-            <span className="mr-2">👤</span>
-            {open && <span className="font-medium text-gray-700">Profile</span>}
-          </button>
+            {/* HEADER */}
+            <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 bg-gray-50/50">
+              <span className="font-bold text-emerald-900 text-lg">
+                Navigation
+              </span>
 
-          <AnimatePresence>
-            {profileOpen && open && (
-              <motion.div
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-                className="ml-8 mt-2 flex flex-col space-y-1"
+              <button
+                onClick={() => setOpen(false)}
+                className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-200 text-gray-500 transition"
               >
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 text-sm transition"
-                >
-                  View Profile
-                </a>
+                ✕
+              </button>
+            </div>
 
-                <a
-                  href="#"
-                  className="text-gray-600 hover:text-gray-800 text-sm transition"
+            {/* CONTENT */}
+            <div className="flex-1 flex flex-col justify-between p-6">
+              <div className="space-y-3">
+                <button
+                  onClick={() => setProfileOpen(!profileOpen)}
+                  className={`flex items-center w-full px-4 py-3 rounded-2xl transition-all ${
+                    profileOpen
+                      ? "bg-emerald-50 text-emerald-700"
+                      : "text-gray-600 hover:bg-gray-100"
+                  }`}
                 >
-                  Change Password
-                </a>
-              </motion.div>
-            )}
-          </AnimatePresence>
-        </div>
+                  <span className="text-xl">👤</span>
+                  <span className="ml-4 font-semibold">Profile</span>
+                  <span
+                    className={`ml-auto transition-transform ${profileOpen ? "rotate-180" : ""}`}
+                  >
+                    ▾
+                  </span>
+                </button>
 
-        {/* Future links */}
-        {/*<a
-          href="#"
-          className="flex items-center px-3 py-2 hover:bg-gray-100 rounded-lg transition"
-        >
-          <span className="mr-2">📄</span>
-          {open && <span className="text-gray-700">Other Section</span>}
-        </a>*/}
-      </nav>
-      {/* Bottom Section: Sign Out */}
-      <div className="px-2 mb-4">
-        <button
-          onClick={handleSignOut}
-          className="flex items-center w-full px-3 py-2 hover:bg-red-100 rounded-lg transition text-red-600"
-        >
-          <span className="mr-2">🚪</span>
-          {open && <span className="font-medium">Sign Out</span>}
-        </button>
-      </div>
-    </motion.div>
+                <AnimatePresence>
+                  {profileOpen && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="ml-12 overflow-hidden space-y-2 text-sm"
+                    >
+                      <p className="py-2 text-gray-500 hover:text-emerald-600 cursor-pointer transition">
+                        View Profile
+                      </p>
+                      <p className="py-2 text-gray-500 hover:text-emerald-600 cursor-pointer transition">
+                        Change Password
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+
+              <button
+                onClick={handleSignOut}
+                className="flex items-center px-4 py-3 rounded-2xl text-red-500 hover:bg-red-50 font-semibold transition-colors"
+              >
+                <span className="text-xl">🚪</span>
+                <span className="ml-4">Sign Out</span>
+              </button>
+            </div>
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
   );
 }

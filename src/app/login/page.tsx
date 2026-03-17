@@ -5,11 +5,13 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { login } from "@/services/auth";
 import Image from "next/image";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,14 +91,24 @@ export default function LoginPage() {
               className="border-none rounded-xl p-3.5 md:p-4 bg-white/90 text-black outline-none focus:ring-2 focus:ring-white/50 transition-all text-sm"
             />
 
-            <input
-              type="password"
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="border-none rounded-xl p-3.5 md:p-4 bg-white/90 text-black outline-none focus:ring-2 focus:ring-white/50 transition-all text-sm"
-            />
+            <div className="relative w-full">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full border-none rounded-xl p-3.5 md:p-4 pr-12 bg-white/90 text-black outline-none focus:ring-2 focus:ring-white/50 transition-all text-sm"
+              />
+
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 transition"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
 
             <button
               type="submit"
