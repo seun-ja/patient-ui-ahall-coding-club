@@ -9,6 +9,7 @@ export interface Appointment {
 
 export interface AppointmentCreated {
   appointmentId: string;
+  doctorId: string;
   doctorFirstName: string;
   date: string;
   status: Status;
@@ -21,7 +22,7 @@ export interface AppointmentRequest {
   preferred_doctor_id: string;
 }
 
-enum Status {
+export enum Status {
   Pending = "pending",
   OnGoing = "ongoing",
   Cancelled = "cancelled",

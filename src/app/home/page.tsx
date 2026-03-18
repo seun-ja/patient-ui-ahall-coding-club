@@ -4,8 +4,8 @@ import { useState, useEffect } from "react";
 import Navbar from "@/components/layout/Navbar";
 import Sidebar from "@/components/layout/Sidebar";
 import AppointmentForm from "@/components/ui/AppointmentForm";
-import { bookAppointments } from "@/services/appointments";
-import { AppointmentCreated, AppointmentRequest } from "@/types/appointment";
+import { bookAppointments, getAppointments } from "@/services/appointments";
+import { Appointment, AppointmentRequest } from "@/types/appointment";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { Claims } from "@/services/jwt";
@@ -15,8 +15,10 @@ export default function LandingPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [claims, setClaims] = useState<Claims | null>(null);
-  const [appointments, setAppointments] = useState<AppointmentCreated[]>([]);
+  const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const nextAppointment = appointments.find((a) => a.status === "pending");
+  const displayAppointment = nextAppointment ?? appointments[0];
 
   const router = useRouter();
 
@@ -33,11 +35,23 @@ export default function LandingPage() {
       setClaims(decoded.claims);
     } catch {
       router.push("/login");
-      return;
     } finally {
       setLoading(false);
     }
   }, [router]);
+
+  useEffect(() => {
+    if (!claims?.sub) return;
+
+    // TODO: Cache appointments
+    getAppointments(claims.sub)
+      .then((data) => {
+        setAppointments(data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch appointments:", err);
+      });
+  }, [claims]);
 
   if (loading) {
     return <p className="p-6 text-gray-500">Loading...</p>;
@@ -85,10 +99,10 @@ export default function LandingPage() {
               ) : (
                 <div className="mt-2">
                   <p className="font-medium text-gray-800">
-                    {appointments[0].doctorFirstName}
+                    Dr. {displayAppointment?.doctor_first_name}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {new Date(appointments[0].date).toLocaleString()}
+                    {new Date(displayAppointment?.date).toLocaleString()}
                   </p>
                 </div>
               )}
@@ -114,12 +128,12 @@ export default function LandingPage() {
               <div className="space-y-4">
                 {appointments.map((appt) => (
                   <div
-                    key={appt.appointmentId}
+                    key={appt.id}
                     className="flex justify-between items-center border-b border-gray-50 pb-3 last:border-0"
                   >
                     <div>
                       <p className="font-medium text-gray-800">
-                        Dr. {appt.doctorFirstName}
+                        Dr. {appt.doctor_first_name}
                       </p>
                       <p className="text-sm text-gray-500">
                         {new Date(appt.date).toLocaleString()}
@@ -133,7 +147,7 @@ export default function LandingPage() {
                           : "bg-yellow-100 text-yellow-600"
                       }`}
                     >
-                      {appt.status ? "Confirmed" : "Pending"}
+                      {appt.status}
                     </span>
                   </div>
                 ))}
@@ -174,7 +188,15 @@ export default function LandingPage() {
               <AppointmentForm
                 onSubmit={async (data: AppointmentRequest) => {
                   const created = await bookAppointments(data);
-                  setAppointments((prev) => [created, ...prev]);
+                  const createdAppointment = {
+                    id: created.appointmentId,
+                    patient_id: claims.sub,
+                    doctor_id: created.doctorId,
+                    doctor_first_name: created.doctorFirstName,
+                    date: created.date,
+                    status: created.status,
+                  };
+                  setAppointments((prev) => [createdAppointment, ...prev]);
                   setModalOpen(false);
                 }}
               />

@@ -5,9 +5,13 @@ import {
   AppointmentRequest,
 } from "@/types/appointment";
 
-export const getAppointments = async (): Promise<Appointment[]> => {
-  const res = await api.get<Appointment[]>("/appointments");
-  return res.data;
+export const getAppointments = async (
+  patient_id: string,
+): Promise<Appointment[]> => {
+  const res = await api.get<{ appointments: Appointment[] }>(
+    `/appointments/${patient_id}`,
+  );
+  return res.data.appointments;
 };
 
 export const bookAppointments = async (
