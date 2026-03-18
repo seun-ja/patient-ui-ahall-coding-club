@@ -27,15 +27,15 @@ body {
 
 /* Fixed: Tailwind uses the ! prefix for importance, not the CSS keyword */
 .react-datepicker {
-    @apply !border-gray-300 !rounded-lg !shadow-xl !font-sans;
+    @apply border-gray-300! rounded-lg! shadow-xl! font-sans;
 }
 
 .react-datepicker__header {
-    @apply !bg-gray-50 !border-b-gray-200;
+    @apply bg-gray-50! border-b-gray-200!;
 }
 
 .react-datepicker__day--selected {
-    @apply !bg-blue-500 !rounded-full;
+    @apply bg-blue-500! rounded-full!;
 }
 
 /* If you still need standard CSS for some reason,

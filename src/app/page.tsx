@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-emerald-800 to-emerald-700 text-white">
+    <div className="min-h-screen bg-linear-to-br from-emerald-900 via-emerald-800 to-emerald-700 text-white">
       {/* Navbar */}
       <header className="flex items-center justify-between px-8 py-6">
         <div className="flex items-center gap-3">

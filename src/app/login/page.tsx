@@ -34,8 +34,8 @@ export default function LoginPage() {
     // Changed to h-screen and overflow-hidden to lock the view
     <div className="flex flex-col md:flex-row h-screen w-screen overflow-hidden bg-white">
       {/* 1. Top Image Section: h-[30vh] ensures it only takes 30% of mobile height */}
-      <div className="relative h-[30vh] md:h-full w-full md:w-1/2 flex-shrink-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-purple-600 opacity-20 md:opacity-80 md:rounded-tr-3xl md:rounded-br-3xl" />
+      <div className="relative h-[30vh] md:h-full w-full md:w-1/2 shrink-0">
+        <div className="absolute inset-0 bg-linear-to-br from-blue-600 to-purple-600 opacity-20 md:opacity-80 md:rounded-tr-3xl md:rounded-br-3xl" />
         <Image
           src="/login-illustration.jpg"
           alt="Illustration"
@@ -47,7 +47,7 @@ export default function LoginPage() {
       </div>
 
       {/* 2. Bottom Form Section: flex-1 fills the remaining 70% of the screen */}
-      <div className="flex-1 flex flex-col justify-center items-center bg-gradient-to-b from-white to-gray-50 p-4 md:p-12 overflow-hidden">
+      <div className="flex-1 flex flex-col justify-center items-center bg-linear-to-b from-white to-gray-50 p-4 md:p-12 overflow-hidden">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
