@@ -17,6 +17,7 @@ export default function LandingPage() {
   const [claims, setClaims] = useState<Claims | null>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [bookingError, setBookingError] = useState<string | null>(null);
   const nextAppointment = appointments.find((a) => a.status === "pending");
   const displayAppointment = nextAppointment ?? appointments[0];
 
@@ -47,9 +48,6 @@ export default function LandingPage() {
     getAppointments(claims.sub)
       .then((data) => {
         setAppointments(data);
-      })
-      .catch((err) => {
-        console.error("Failed to fetch appointments:", err);
       });
   }, [claims]);
 
@@ -70,7 +68,7 @@ export default function LandingPage() {
           {/* Floating Hamburger - Visible ONLY on Desktop */}
           <button
             onClick={() => setSidebarOpen(true)}
-            className="fixed bottom-8 left-8 z-40 hidden md:flex items-center justify-center w-14 h-14 bg-emerald-900 text-white rounded-full shadow-xl hover:bg-emerald-800 hover:scale-110 transition-all active:scale-95 border-2 border-white/20"
+            className="fixed bottom-8 left-8 z-40 hidden md:flex items-center justify-center w-14 h-14 bg-blue-500 text-white rounded-full shadow-xl hover:bg-emerald-800 hover:scale-110 transition-all active:scale-95 border-2 border-white/20"
           >
             <span className="text-2xl">☰</span>
           </button>
@@ -110,7 +108,7 @@ export default function LandingPage() {
 
             <button
               onClick={() => setModalOpen(true)}
-              className="bg-teal-400 hover:bg-teal-500 text-white px-6 py-2.5 rounded-xl font-medium transition shadow-md active:scale-95"
+              className="bg-gray-500 hover:bg-blue-300 text-white px-6 py-2.5 rounded-xl font-medium transition shadow-md active:scale-95"
             >
               Book Appointment
             </button>
@@ -173,7 +171,7 @@ export default function LandingPage() {
               exit={{ scale: 0.9, y: 20 }}
             >
               <div className="flex justify-between items-center mb-6">
-                <h3 className="text-xl font-bold text-emerald-900">
+                <h3 className="text-xl font-bold text-blue-500">
                   Book Appointment
                 </h3>
 
@@ -186,18 +184,33 @@ export default function LandingPage() {
               </div>
 
               <AppointmentForm
+                modalOpen={modalOpen}
+                error={bookingError || undefined}
+                onClearError={() => setBookingError(null)}
                 onSubmit={async (data: AppointmentRequest) => {
-                  const created = await bookAppointments(data);
-                  const createdAppointment = {
-                    id: created.appointmentId,
-                    patient_id: claims.sub,
-                    doctor_id: created.doctorId,
-                    doctor_first_name: created.doctorFirstName,
-                    date: created.date,
-                    status: created.status,
-                  };
-                  setAppointments((prev) => [createdAppointment, ...prev]);
-                  setModalOpen(false);
+                  try {
+                    const created = await bookAppointments(data);
+                    const createdAppointment = {
+                      id: created.appointmentId,
+                      patient_id: claims.sub,
+                      doctor_id: created.doctorId,
+                      doctor_first_name: created.doctorFirstName,
+                      date: created.date,
+                      status: created.status,
+                    };
+                    setAppointments((prev) => [createdAppointment, ...prev]);
+                    setModalOpen(false);
+                  } catch (err: any) {
+                    // Try to extract a meaningful error message
+                    let msg = err?.response?.data?.message || err?.message || String(err);
+                    if (typeof msg === "string" && msg.toLowerCase().includes("slot already taken")) {
+                      setBookingError("Choose another time, already taken");
+                    } else if (msg && typeof msg === "string" && msg !== "Network Error") {
+                      setBookingError(msg);
+                    } else {
+                      setBookingError("Failed to book appointment. Please try again.");
+                    }
+                  }
                 }}
               />
             </motion.div>

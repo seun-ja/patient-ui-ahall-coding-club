@@ -76,6 +76,25 @@ The application is designed for a seamless, responsive experience with a focus o
 - `npm start` — Start the production server
 - `npm run lint` — Run ESLint
 
+## Custom localhost
+
+Install `portless`. Learn more [here](https://port1355.dev/)
+
+```bash
+`npm install -g portless`
+```
+
+Enable HTTPS (one-time setup, auto-generates certs)
+```bash
+`portless proxy start --https`
+```
+
+Start the development server
+
+```bash
+`portless patient next dev`
+```
+
 ## Environment Variables
 
 Create a `.env.local` file in the root directory with:

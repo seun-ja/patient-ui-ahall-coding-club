@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 
 export default function LandingPage() {
   return (
-    <div className="min-h-screen bg-linear-to-br from-emerald-900 via-emerald-800 to-emerald-700 text-white">
+    <div className="min-h-screen bg-linear-to-br from-blue-500 via-emerald-800 to-emerald-700 text-white">
       {/* Navbar */}
       <header className="flex items-center justify-between px-8 py-6">
         <div className="flex items-center gap-3">
@@ -21,7 +21,7 @@ export default function LandingPage() {
 
         <Link
           href="/login"
-          className="bg-white text-emerald-900 px-5 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
+          className="bg-white text-blue-500 px-5 py-2 rounded-lg font-semibold hover:bg-gray-100 transition"
         >
           Login
         </Link>
@@ -48,14 +48,14 @@ export default function LandingPage() {
           <div className="flex gap-4">
             <Link
               href="/login"
-              className="bg-white text-emerald-900 px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-gray-100 transition"
+              className="bg-white text-blue-500 px-6 py-3 rounded-xl font-semibold shadow-lg hover:bg-gray-100 transition"
             >
               Get Started
             </Link>
 
             <Link
               href="#features"
-              className="border border-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-emerald-900 transition"
+              className="border border-white px-6 py-3 rounded-xl font-semibold hover:bg-white hover:text-blue-500 transition"
             >
               Learn More
             </Link>

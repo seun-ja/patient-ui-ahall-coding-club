@@ -41,9 +41,9 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
           >
             {/* HEADER */}
             <div className="h-20 flex items-center justify-between px-6 border-b border-gray-100 bg-gray-50/50">
-              <span className="font-bold text-emerald-900 text-lg">
+              {/*<span className="font-bold text-blue-500 text-lg">
                 Navigation
-              </span>
+              </span>*/}
 
               <button
                 onClick={() => setOpen(false)}
@@ -81,9 +81,12 @@ export default function Sidebar({ open, setOpen }: SidebarProps) {
                       exit={{ height: 0, opacity: 0 }}
                       className="ml-12 overflow-hidden space-y-2 text-sm"
                     >
-                      <p className="py-2 text-gray-500 hover:text-emerald-600 cursor-pointer transition">
+                      <button
+                        onClick={() => router.push("/profile")}
+                        className="w-full text-left py-2 text-gray-500 hover:text-emerald-600 transition"
+                      >
                         View Profile
-                      </p>
+                      </button>
                       <p className="py-2 text-gray-500 hover:text-emerald-600 cursor-pointer transition">
                         Change Password
                       </p>

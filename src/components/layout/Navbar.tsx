@@ -8,7 +8,7 @@ interface NavbarProps {
 
 export default function Navbar({ toggleSidebar }: NavbarProps) {
   return (
-    <header className="sticky top-0 z-30 h-16 md:h-20 bg-emerald-900 flex items-center justify-between px-6 text-white shadow-md">
+    <header className="sticky top-0 z-30 h-16 md:h-20 bg-blue-500 flex items-center justify-between px-6 text-white shadow-md">
       {/* Hamburger (VISIBLE ONLY ON MOBILE) */}
       <button
         onClick={toggleSidebar}
