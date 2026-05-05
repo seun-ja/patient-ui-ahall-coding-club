@@ -29,9 +29,9 @@ export default function Navbar({ toggleSidebar }: NavbarProps) {
       </div>
 
       {/* Profile Placeholder/Right Side */}
-      <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
+      {/* <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center border border-white/20">
         <span className="text-sm">👤</span>
-      </div>
+      </div> */}
     </header>
   );
 }

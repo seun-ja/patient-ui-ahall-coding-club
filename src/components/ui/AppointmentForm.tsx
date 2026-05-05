@@ -39,33 +39,6 @@ export default function AppointmentForm({
   const [doctor, setDoctor] = useState("");
   const [doctorSlots, setDoctorSlots] = useState<Record<string, string[]>>({});
 
-  // Fetch available slots for all doctors for today's date on mount
-  useEffect(() => {
-    if (!modalOpen) return;
-    const today = new Date().toISOString().split("T")[0];
-
-    const fetchAll = async () => {
-      // const slotsMap: Record<string, string[]> = {};
-
-      const results = await Promise.all(
-        doctors.map((doc) =>
-          getSlots(doc.first_name, today).then((slots) => ({
-            name: doc.first_name,
-            slots,
-          })),
-        ),
-      );
-
-      const slotsMap = Object.fromEntries(
-        results.map((r) => [r.name, r.slots]),
-      );
-
-      setDoctorSlots(slotsMap);
-    };
-
-    fetchAll();
-  }, [modalOpen]);
-
   // When doctor or date changes, set slots from pre-fetched if date is today, else fetch
   useEffect(() => {
     if (!date || !doctor) return;
