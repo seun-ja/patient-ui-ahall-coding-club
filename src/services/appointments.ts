@@ -11,7 +11,7 @@ export const getAppointments = async (
   const res = await api.get<{ appointments: Appointment[] }>(
     `/appointments/${patient_id}`,
   );
-  return res.data.appointments;
+  return [];
 };
 
 export const bookAppointments = async (
